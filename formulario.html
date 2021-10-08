@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="formulario.css">
+    <title>Cadastro</title>
+    <script>
+    
+        function limpa_formulário_cep() {
+                //Limpa valores do formulário de cep.
+                document.getElementById('rua').value=("");
+                document.getElementById('bairro').value=("");
+                document.getElementById('cidade').value=("");
+                document.getElementById('uf').value=("");
+                document.getElementById('ibge').value=("");
+        }
+    
+        function meu_callback(conteudo) {
+            if (!("erro" in conteudo)) {
+                //Atualiza os campos com os valores.
+                document.getElementById('rua').value=(conteudo.logradouro);
+                document.getElementById('bairro').value=(conteudo.bairro);
+                document.getElementById('cidade').value=(conteudo.localidade);
+                document.getElementById('uf').value=(conteudo.uf);
+                document.getElementById('ibge').value=(conteudo.ibge);
+            } //end if.
+            else {
+                //CEP não Encontrado.
+                limpa_formulário_cep();
+                alert("CEP não encontrado.");
+            }
+        }
+            
+        function pesquisacep(valor) {
+    
+            //Nova variável "cep" somente com dígitos.
+            var cep = valor.replace(/\D/g, '');
+    
+            //Verifica se campo cep possui valor informado.
+            if (cep != "") {
+    
+                //Expressão regular para validar o CEP.
+                var validacep = /^[0-9]{8}$/;
+    
+                //Valida o formato do CEP.
+                if(validacep.test(cep)) {
+    
+                    //Preenche os campos com "..." enquanto consulta webservice.
+                    document.getElementById('rua').value="...";
+                    document.getElementById('bairro').value="...";
+                    document.getElementById('cidade').value="...";
+                    document.getElementById('uf').value="...";
+                    document.getElementById('ibge').value="...";
+    
+                    //Cria um elemento javascript.
+                    var script = document.createElement('script');
+    
+                    //Sincroniza com o callback.
+                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+    
+                    //Insere script no documento e carrega o conteúdo.
+                    document.body.appendChild(script);
+    
+                } //end if.
+                else {
+                    //cep é inválido.
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } //end if.
+            else {
+                //cep sem valor, limpa formulário.
+                limpa_formulário_cep();
+            }
+        };
+    
+        </script>
+</head>
+<body>
+
+    <div>
+        <h1 id="titulo"> Cadrasto do Cliente</h1>
+        <p  id="subtitulo">Complete suas informações</p>
+        <br>
+    </div>
+
+    <form method="POST">
+        <fieldset class="grupo"> 
+            <div>
+                <label for="nome"><strong>Nome</strong></label>
+                <input type="text" name="" id="nome" required>
+            </div>
+
+            <div>
+                <label for="sobrenome"><strong>Sobrenome</strong></label>
+                <input type="text" name="sobrenome" id="sobrenome" required>
+            </div>
+        </fieldset>
+
+        <div class="campo">
+            <label><strong>CPF</strong></label>
+            <input type="text" name="cpf" id="cpf" required>
+        </div>
+
+        <div class="campo">
+            <label><strong>Email</strong></label>
+            <input type="email" name="email" id="email" required>
+            <label><strong>Senha</strong></label>
+            <input type="password" name="senha" id="senha" required>
+        </div>
+
+        <div class="campo">
+            <label><strong>Sexo</strong></label>
+            <input type="radio" name="sexo" value="masculino" id="masculino" checked>
+            <label for="masculino">masculino</label>
+            <input type="radio" name="sexo" value="feminino" id="feminino">
+            <label for="feminino">feminino</label>
+            <input type="radio" name="sexo" value="outro" id="outro">
+            <label for="outro">outro</label>
+        </div>
+
+        <div class="campo">
+            <label><strong>Data de Nascimento</strong></label>
+            <input type="datetime-local" name="bdaytime" required>
+        </div>
+
+        <div class="campo">
+            <label><strong>Telefone</strong></label>
+            <input type="tel" name="usertel" required>
+        </div>
+
+        <div>
+            <fieldset class="grupo">
+                <p><strong>Endereço</strong></p>
+               <label>CEP</label>
+               <input type="text" name="cep" id="cep" required>
+
+               <div>
+                <label>Rua</label>
+                <input type="text" name="" id="rua" required>
+            </div>
+            <div>
+                <label>Cidade</label>
+                <input type="text" name="" id="cidade" required>
+            </div>
+            <div>
+                <label>Bairro</label>
+                <input type="text" name="" id="bairro" required>
+            </div>
+            <div>
+                <label>Estado</label>
+                <input type="text" name="" id="estado" required>
+            </div>
+         </fieldset>
+        </div>
+
+        <button class="botao" type="submit">Concluido</button>
+
+      
+
+
+
+    </form>
+    <script src="js/formulario.js"></script>
+</body>
+</html>
